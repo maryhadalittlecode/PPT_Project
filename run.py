@@ -13,9 +13,7 @@ def run_one_image(image_path, output_dir, method_name, low, high, connectivity, 
 
     hysteresis_fn = METHODS[method_name]
 
-    start = time.perf_counter()
-    final_edges = hysteresis_fn(stages["strong_map"], stages["weak_map"], connectivity)
-    elapsed = time.perf_counter() - start
+    final_edges, elapsed = hysteresis_fn(stages["strong_map"], stages["weak_map"], connectivity)
 
     base = os.path.splitext(os.path.basename(image_path))[0]
     image_out_dir = os.path.join(output_dir, base)
@@ -56,8 +54,9 @@ def main():
         return
 
     total = 0.0
-    for image_path in image_paths:
-        total += run_one_image(
+    for idx, image_path in enumerate(image_paths):
+
+        cur_time = run_one_image(
             image_path=image_path,
             output_dir=args.output_dir,
             method_name=args.method,
@@ -66,9 +65,20 @@ def main():
             connectivity=args.connectivity,
             save_intermediate=args.save_intermediate,
         )
+        if idx == 0:
+            print(f"First image processed in {cur_time:.6f} seconds. \
+                  This is am untimed warm-up call before measuring")
+        else:
+            total += cur_time
+
 
     print(f"Processed {len(image_paths)} image(s). Total hysteresis time: {total:.6f} seconds")
 
 
 if __name__ == "__main__":
     main()
+
+
+# Results:
+# input: sequential_bfs took 0.025053 seconds
+# input: frontier_parallel took 0.000387 seconds
