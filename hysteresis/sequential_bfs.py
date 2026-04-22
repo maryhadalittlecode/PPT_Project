@@ -1,5 +1,6 @@
 from collections import deque
 import numpy as np
+import time
 
 
 def hysteresis(strong_map, weak_map, connectivity=8):
@@ -9,6 +10,7 @@ def hysteresis(strong_map, weak_map, connectivity=8):
     Start from strong-edge pixels and grow into neighboring weak-edge pixels.
     Any weak pixel connected to a strong pixel becomes a final edge.
     """
+    start = time.perf_counter()
     h, w = strong_map.shape
     result = strong_map.copy()
     visited = strong_map.copy()
@@ -32,4 +34,6 @@ def hysteresis(strong_map, weak_map, connectivity=8):
                     result[nr, nc] = True
                     q.append((nr, nc))
 
-    return result
+    elapsed = time.perf_counter() - start
+
+    return result, elapsed
