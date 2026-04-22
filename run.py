@@ -80,5 +80,6 @@ if __name__ == "__main__":
 
 
 # Results:
-# input: sequential_bfs took 0.025053 seconds
+# input: sequential_bfs took    0.025053 seconds
+# input: union_find took        0.001635 seconds
 # input: frontier_parallel took 0.000387 seconds
